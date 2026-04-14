@@ -1,0 +1,96 @@
+version: '3.9'
+
+services:
+  # PostgreSQL with PostGIS
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: meromausam_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: meromausam
+      POSTGRES_USER: meromausam
+      POSTGRES_PASSWORD: meromausam_pass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meromausam"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for job queues & caching
+  redis:
+    image: redis:7-alpine
+    container_name: meromausam_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # NestJS Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: meromausam_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://meromausam:meromausam_pass@db:5432/meromausam
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      NODE_ENV: production
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      FROM_EMAIL: ${FROM_EMAIL:-alerts@meromausam.np}
+      APP_URL: ${APP_URL:-http://localhost}
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - backend_logs:/app/logs
+
+  # React Frontend (built and served by nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: meromausam_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: /api
+      VITE_WS_URL: ws://localhost/ws
+    ports:
+      - "3000:80"
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: meromausam_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  db_data:
+  redis_data:
+  backend_logs:

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view:*)",
+      "Bash(curl -s http://localhost/api/weather/districts)",
+      "Bash(curl -s \"http://localhost/api/weather/district/kathmandu\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"http://localhost/api/weather/district/taplejung\")",
+      "Bash(curl -s \"http://localhost/api/weather/map\")",
+      "Bash(curl -s \"http://localhost/api/weather/map/data\")",
+      "Bash(curl -s \"http://localhost:3000/api/weather/map/data\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Districts with forecast: {sum\\(1 for x in d if x[\\\\\"forecast\\\\\"]\\)} / {len\\(d\\)}'\\)\")",
+      "Bash(docker exec meromausam_backend sh -c 'node -e \":*)",
+      "Bash(curl -s \"http://localhost:3000/api/weather/overview\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Districts:', len\\(d['districts']\\), '| Avg temp:', d['summary']['avgTemp']\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); s=d['summary']; print\\(f'  Avg temp: {s[\\\\\"avgTemp\\\\\"]}°C | Rainy: {s[\\\\\"rainyDistricts\\\\\"]} | Alerts: {s[\\\\\"activeAlerts\\\\\"]} | Districts: {len\\(d[\\\\\"districts\\\\\"]\\)}'\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); has=sum\\(1 for x in d if x['forecast']\\); print\\(f'  {has}/{len\\(d\\)} districts have forecast data'\\)\")"
+    ]
+  }
+}

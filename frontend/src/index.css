@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a1628;
+    color: #e2e8f0;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Sora', sans-serif;
+  }
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: #0d2137 !important;
+  font-family: 'DM Sans', sans-serif;
+}
+.leaflet-tile-pane { filter: brightness(0.85) saturate(0.6) hue-rotate(180deg); }
+.leaflet-control-zoom a {
+  background: rgba(10, 22, 40, 0.9) !important;
+  color: #90cdf4 !important;
+  border-color: rgba(144, 205, 244, 0.2) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(49, 130, 206, 0.4) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(10, 22, 40, 0.7) !important;
+  color: rgba(255,255,255,0.4) !important;
+  font-size: 10px;
+}
+.leaflet-popup-content-wrapper {
+  background: rgba(10, 22, 40, 0.95) !important;
+  border: 1px solid rgba(144, 205, 244, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+  backdrop-filter: blur(20px);
+}
+.leaflet-popup-tip { background: rgba(10, 22, 40, 0.95) !important; }
+.leaflet-popup-content { margin: 0 !important; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(252, 129, 74, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(252, 129, 74, 0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-fade-up { animation: fadeInUp 0.4s ease forwards; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.glass {
+  background: rgba(13, 33, 55, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(144, 205, 244, 0.12);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.severe-red { color: #fc8181; }
+.severe-orange { color: #f6ad55; }
+.severe-yellow { color: #faf089; }
+.severe-green { color: #68d391; }

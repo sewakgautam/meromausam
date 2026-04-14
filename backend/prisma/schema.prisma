@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model District {
+  id          String   @id @default(cuid())
+  name        String
+  nameNepali  String
+  province    String
+  lat         Float
+  lon         Float
+  elevation   Float    @default(0)
+  population  Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  forecasts      Forecast[]
+  observations   Observation[]
+  subscriptions  Subscription[]
+  alerts         Alert[]
+
+  @@map("districts")
+}
+
+model Forecast {
+  id           String   @id @default(cuid())
+  districtId   String
+  district     District @relation(fields: [districtId], references: [id])
+  
+  validTime    DateTime
+  fetchedAt    DateTime @default(now())
+  source       String   @default("open-meteo")
+  
+  // Temperature
+  tempMax      Float?
+  tempMin      Float?
+  tempCurrent  Float?
+  feelsLike    Float?
+  
+  // Precipitation
+  precipitation    Float?   // mm
+  precipProb       Float?   // 0-100%
+  snowfall         Float?   // cm
+  
+  // Conditions
+  weatherCode      Int?
+  weatherDesc      String?
+  weatherDescNp    String?
+  
+  // Wind
+  windSpeed    Float?   // km/h
+  windDir      Float?   // degrees
+  windGust     Float?
+  
+  // Atmosphere
+  humidity     Float?
+  pressure     Float?
+  visibility   Float?
+  uvIndex      Float?
+  cloudCover   Float?
+  
+  // Severe weather flags
+  isThunderstorm  Boolean @default(false)
+  isHeavyRain     Boolean @default(false)
+  isHailstone     Boolean @default(false)
+  isSnow          Boolean @default(false)
+  isFog           Boolean @default(false)
+  isHeatwave      Boolean @default(false)
+  isColdwave      Boolean @default(false)
+  
+  severity        String  @default("normal") // normal, watch, warning, extreme
+
+  @@index([districtId, validTime])
+  @@map("forecasts")
+}
+
+model Observation {
+  id          String   @id @default(cuid())
+  districtId  String
+  district    District @relation(fields: [districtId], references: [id])
+  
+  observedAt  DateTime
+  source      String   // dhm, open-meteo
+  stationId   String?
+  stationName String?
+  
+  temp        Float?
+  humidity    Float?
+  rainfall    Float?
+  pressure    Float?
+  windSpeed   Float?
+  windDir     Float?
+  
+  createdAt   DateTime @default(now())
+
+  @@index([districtId, observedAt])
+  @@map("observations")
+}
+
+model SatelliteFrame {
+  id          String   @id @default(cuid())
+  source      String   // himawari, modis
+  band        String   // infrared, visible, rgb
+  region      String   @default("nepal")
+  frameTime   DateTime
+  imageUrl    String
+  tileUrl     String?
+  fetchedAt   DateTime @default(now())
+
+  @@index([source, frameTime])
+  @@map("satellite_frames")
+}
+
+model WeatherAlert {
+  id          String   @id @default(cuid())
+  districtId  String?
+  province    String?
+  title       String
+  titleNp     String?
+  description String
+  descNp      String?
+  severity    String   // green, yellow, orange, red
+  alertType   String   // rain, flood, thunder, heatwave, snow, fog, cold, hail, wind
+  validFrom   DateTime
+  validUntil  DateTime
+  source      String   @default("system")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@map("weather_alerts")
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  districtId  String
+  district    District @relation(fields: [districtId], references: [id])
+  alertType   String
+  severity    String
+  message     String
+  createdAt   DateTime @default(now())
+  sentAt      DateTime?
+
+  @@map("alerts")
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  email       String
+  districtId  String
+  district    District @relation(fields: [districtId], references: [id])
+  
+  alertTypes  String[] // rain, thunder, snow, hail, flood, heatwave
+  language    String   @default("en") // en, np
+  isActive    Boolean  @default(true)
+  confirmed   Boolean  @default(false)
+  token       String   @unique @default(cuid())
+  
+  createdAt   DateTime @default(now())
+  lastSentAt  DateTime?
+
+  @@unique([email, districtId])
+  @@map("subscriptions")
+}
+
+model DhmBulletin {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  bulletinDate DateTime
+  bulletinType String  // daily, warning, special
+  url         String?
+  parsedData  Json?
+  createdAt   DateTime @default(now())
+
+  @@map("dhm_bulletins")
+}
