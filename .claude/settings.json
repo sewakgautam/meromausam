@@ -14,7 +14,17 @@
       "Bash(curl -s \"http://localhost:3000/api/weather/overview\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Districts:', len\\(d['districts']\\), '| Avg temp:', d['summary']['avgTemp']\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); s=d['summary']; print\\(f'  Avg temp: {s[\\\\\"avgTemp\\\\\"]}°C | Rainy: {s[\\\\\"rainyDistricts\\\\\"]} | Alerts: {s[\\\\\"activeAlerts\\\\\"]} | Districts: {len\\(d[\\\\\"districts\\\\\"]\\)}'\\)\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); has=sum\\(1 for x in d if x['forecast']\\); print\\(f'  {has}/{len\\(d\\)} districts have forecast data'\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); has=sum\\(1 for x in d if x['forecast']\\); print\\(f'  {has}/{len\\(d\\)} districts have forecast data'\\)\")",
+      "Bash(docker build:*)",
+      "Bash(docker system:*)",
+      "Bash(docker builder:*)",
+      "Bash(docker image:*)",
+      "Bash(diskutil info:*)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(du -sh ~/*)",
+      "Bash(xcrun simctl *)",
+      "Read(//Users/sgaut/Library/Developer/CoreSimulator/**)",
+      "Bash(tmutil listlocalsnapshots *)"
     ]
   }
 }

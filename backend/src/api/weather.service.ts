@@ -163,4 +163,45 @@ export class WeatherService {
       orderBy: { bulletinDate: 'desc' },
     });
   }
+
+  // Returns all 7 days of forecasts for all districts — used by the time slider
+  async getForecastMatrix() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const end = new Date(today);
+    end.setDate(end.getDate() + 7);
+
+    const districts = await this.prisma.district.findMany({ orderBy: { name: 'asc' } });
+    const forecasts = await this.prisma.forecast.findMany({
+      where: { validTime: { gte: today, lt: end } },
+      orderBy: [{ districtId: 'asc' }, { validTime: 'asc' }],
+    });
+
+    // Group forecasts: districtId → day index (0–6) → forecast
+    const byDistrict: Record<string, any[]> = {};
+    for (const f of forecasts) {
+      if (!byDistrict[f.districtId]) byDistrict[f.districtId] = [];
+      byDistrict[f.districtId].push(f);
+    }
+
+    // Build matrix: days[0..6] → array of MapDistrict-like objects
+    const days: any[][] = Array.from({ length: 7 }, () => []);
+    for (const d of districts) {
+      const dForecasts = byDistrict[d.id] || [];
+      for (let i = 0; i < 7; i++) {
+        days[i].push({
+          id: d.id,
+          name: d.name,
+          nameNepali: d.nameNepali,
+          province: d.province,
+          lat: d.lat,
+          lon: d.lon,
+          elevation: d.elevation,
+          forecast: dForecasts[i] || null,
+        });
+      }
+    }
+
+    return days;
+  }
 }

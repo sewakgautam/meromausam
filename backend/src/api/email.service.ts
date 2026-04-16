@@ -55,7 +55,7 @@ p { color: #4a5568; line-height: 1.6; }
 
     try {
       await this.transporter.sendMail({
-        from: `"MeroMausam 🌦️" <${process.env.FROM_EMAIL || 'alerts@meromausam.np'}>`,
+        from: `"MeroMausam 🌦️" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to: email,
         subject: `Confirm your MeroMausam alert for ${districtName}`,
         html,
@@ -119,7 +119,7 @@ p { color: #4a5568; line-height: 1.6; }
         const html = this.buildDigestEmail(district, forecasts, isNepali, severeFlags, emoji);
 
         await this.transporter.sendMail({
-          from: `"MeroMausam 🌦️" <${process.env.FROM_EMAIL}>`,
+          from: `"MeroMausam 🌦️" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
           to: sub.email,
           subject,
           html,
@@ -188,7 +188,7 @@ p{color:#4a5568;line-height:1.6}
 </div></body></html>`;
 
           await this.transporter.sendMail({
-            from: `"MeroMausam ⚠️" <${process.env.FROM_EMAIL}>`,
+            from: `"MeroMausam ⚠️" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
             to: sub.email,
             subject: `⚠️ ${alert.title} — ${sub.district.name}`,
             html,

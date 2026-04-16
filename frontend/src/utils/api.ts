@@ -88,6 +88,7 @@ async function post<T>(path: string, body: any): Promise<T> {
 export const api = {
   getOverview: () => get<OverviewData>('/weather/overview'),
   getMapData: () => get<MapDistrict[]>('/weather/map/data'),
+  getForecastMatrix: () => get<MapDistrict[][]>('/weather/forecast-matrix'),
   getDistrict: (id: string) => get<{ district: District; forecast: Forecast | null; alerts: WeatherAlert[] }>(`/weather/district/${id}`),
   getForecast: (id: string, days = 7) => get<Forecast[]>(`/weather/district/${id}/forecast?days=${days}`),
   getAlerts: () => get<WeatherAlert[]>('/weather/alerts/active'),

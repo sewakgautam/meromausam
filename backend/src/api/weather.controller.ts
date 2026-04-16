@@ -44,4 +44,9 @@ export class WeatherController {
   async getLatestBulletin() {
     return this.weatherService.getLatestBulletin();
   }
+
+  @Get('forecast-matrix')
+  async getForecastMatrix() {
+    return this.weatherService.getForecastMatrix();
+  }
 }

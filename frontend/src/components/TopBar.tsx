@@ -10,54 +10,55 @@ export default function TopBar() {
     <div
       className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-4 py-3"
       style={{
-        background: 'linear-gradient(180deg, rgba(10,22,40,0.98) 0%, rgba(10,22,40,0.85) 70%, transparent 100%)',
-        backdropFilter: 'blur(12px)',
+        background: 'rgba(255,255,255,0.90)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        boxShadow: '0 1px 16px rgba(0,0,0,0.08)',
       }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <div className="relative">
-          <span className="text-3xl" style={{ filter: 'drop-shadow(0 0 12px rgba(144,205,244,0.6))' }}>🌦️</span>
-        </div>
+        <span className="text-3xl">🌦️</span>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-display font-800 text-white text-lg leading-none tracking-tight">
+            <h1 className="font-display font-800 text-lg leading-none tracking-tight" style={{ color: '#1a365d' }}>
               MeroMausam
             </h1>
             <span className="text-xs px-1.5 py-0.5 rounded-full font-display font-600"
-              style={{ background: 'rgba(144,205,244,0.15)', color: '#90cdf4', border: '1px solid rgba(144,205,244,0.2)' }}>
+              style={{ background: 'rgba(49,130,206,0.1)', color: '#3182ce', border: '1px solid rgba(49,130,206,0.25)' }}>
               LIVE
             </span>
           </div>
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Noto Sans Devanagari' }}>
+          <div className="text-xs mt-0.5" style={{ color: '#718096', fontFamily: 'Noto Sans Devanagari' }}>
             मेरो मौसम · Nepal Weather Intelligence
           </div>
         </div>
       </div>
 
-      {/* Center - Season + stats */}
+      {/* Center — season + stats */}
       <div className="hidden md:flex items-center gap-6">
-        <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <div className="flex items-center gap-2 text-sm" style={{ color: '#4a5568' }}>
           <span>{season.emoji}</span>
           <span className="font-display">{lang === 'en' ? season.season : season.np}</span>
         </div>
         {overview && !loading && (
           <>
-            <div className="w-px h-4" style={{ background: 'rgba(255,255,255,0.15)' }} />
-            <div className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              <span className="font-display font-600 text-white">{overview.summary.avgTemp}°C</span>
+            <div className="w-px h-4" style={{ background: 'rgba(0,0,0,0.12)' }} />
+            <div className="text-sm" style={{ color: '#4a5568' }}>
+              <span className="font-display font-600" style={{ color: '#1a365d' }}>{overview.summary.avgTemp}°C</span>
               <span className="ml-1">avg</span>
             </div>
-            <div className="w-px h-4" style={{ background: 'rgba(255,255,255,0.15)' }} />
-            <div className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              <span className="font-display font-600" style={{ color: '#90cdf4' }}>{overview.summary.rainyDistricts}</span>
+            <div className="w-px h-4" style={{ background: 'rgba(0,0,0,0.12)' }} />
+            <div className="text-sm" style={{ color: '#4a5568' }}>
+              <span className="font-display font-600" style={{ color: '#3182ce' }}>{overview.summary.rainyDistricts}</span>
               <span className="ml-1">rainy districts</span>
             </div>
           </>
         )}
         {loading && (
-          <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            <div className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: 'rgba(144,205,244,0.5)', borderTopColor: 'transparent' }} />
+          <div className="flex items-center gap-2 text-sm" style={{ color: '#a0aec0' }}>
+            <div className="w-3 h-3 rounded-full border-2 animate-spin"
+              style={{ borderColor: 'rgba(49,130,206,0.4)', borderTopColor: '#3182ce' }} />
             Loading data...
           </div>
         )}
@@ -67,29 +68,27 @@ export default function TopBar() {
       <div className="flex items-center gap-2">
         {severeAlerts > 0 && (
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-display font-600"
-            style={{ background: 'rgba(197,48,48,0.2)', border: '1px solid rgba(252,129,129,0.4)', color: '#fc8181' }}>
+            style={{ background: '#fff5f5', border: '1px solid #fed7d7', color: '#c53030' }}>
             <span className="animate-pulse">⚠️</span>
             {severeAlerts} alert{severeAlerts > 1 ? 's' : ''}
           </div>
         )}
 
-        {/* Language toggle */}
         <button
           onClick={toggleLang}
           className="px-3 py-1.5 rounded-full text-xs font-display font-600 transition-all duration-200"
           style={{
-            background: 'rgba(144,205,244,0.1)',
-            border: '1px solid rgba(144,205,244,0.2)',
-            color: '#90cdf4',
+            background: 'rgba(49,130,206,0.08)',
+            border: '1px solid rgba(49,130,206,0.25)',
+            color: '#3182ce',
           }}
         >
           {lang === 'en' ? 'नेपाली' : 'English'}
         </button>
 
-        {/* DHM source badge */}
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
-          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse" />
+          style={{ background: '#f7fafc', border: '1px solid rgba(0,0,0,0.08)', color: '#718096' }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse" />
           DHM · Open-Meteo · NASA
         </div>
       </div>
